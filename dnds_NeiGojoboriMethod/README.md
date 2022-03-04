@@ -1,5 +1,5 @@
 # Purpose
-This script will perform pairwise comparisons of all sequences in a fasta file to calculate dN/dS, Nd (also called Dn), and Sd (also called Ds). dN/dS is a common statistic for measuring the stregth of direction on protein sequences. Nd and Sd are also useful for calculating other popgen statistics, like the proportion of amino acid substitutions driven by positive selection (alpha) and the direction of selection (DoS).
+This script will perform pairwise comparisons of all sequences in a fasta file to calculate dN/dS, Nd (also called Dn), and Sd (also called Ds). dN/dS is a common statistic for measuring the stregth and direction of selection on protein sequences. Nd and Sd are also useful for calculating other popgen statistics, like the proportion of amino acid substitutions driven by positive selection (alpha) and the direction of selection (DoS).
 
 # Quick start
 Download this repository. Install python3 along with the Biopython and numpy modules.
