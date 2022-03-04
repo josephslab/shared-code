@@ -38,7 +38,7 @@ Don't know how to generate input files that meet these criteria? See below
 # Idea for how to get input files
 Apply orthofinder to a folder containing protein sequences from two or more species
 
-Align sequences within each orthogroup of interest (usually the single-copy orthogroups) using MAFFT or a similar alignment tool
+Align the protein sequences within each orthogroup of interest (usually the single-copy orthogroups) using MAFFT or a similar alignment tool
 
 Use seqkit grep to build fasta files containing coding sequences for each orthogroup
 
