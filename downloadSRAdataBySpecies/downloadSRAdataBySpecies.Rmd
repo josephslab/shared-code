@@ -1,0 +1,56 @@
+---
+title: "Download SRA data by species"
+output: html_document
+---
+
+```{r}
+# type out list of species
+speciesList = c(
+"Aquilegia coerulea",
+"Ananas comosus",
+"Amaranthus hypochondriacus",
+"Asparagus officinalis",
+"Amborella trichopoda"
+)
+
+# download sra data for each species
+# This block will only download rna-seq data
+for(species in speciesList){
+    urlSpecies = gsub(" ", "+", species) # sub space for plus to put in url
+    fileSpecies = gsub(" ", "_", species) # sub space for underscore to put in file name
+    download.file(paste("http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&db=sra&rettype=runinfo&term=", '"', urlSpecies, '"', '%5BOrganism%5D+AND+"biomol+rna"%5BProperties%5D', sep = ""), paste(fileSpecies, "_runInfo.csv", sep = ""), quiet = TRUE)
+}
+
+# This block will only download dna-seq data
+for(species in speciesList){
+    urlSpecies = gsub(" ", "+", species) # sub space for plus to put in url
+    fileSpecies = gsub(" ", "_", species) # sub space for underscore to put in file name
+    download.file(paste("http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&db=sra&rettype=runinfo&term=", '"', urlSpecies, '"', '%5BOrganism%5D+AND+"biomol+dna"%5BProperties%5D', sep = ""), paste(fileSpecies, "_runInfo.csv", sep = ""), quiet = TRUE)
+}
+
+# load run data
+speciesRunFiles = list.files(pattern = "_runInfo.csv")
+speciesRunList = lapply(speciesRunFiles, FUN = read.csv)
+names(speciesRunList) = gsub("_runInfo.csv", "", speciesRunFiles)
+sum(unlist(lapply(speciesRunList, nrow))) # number of rows 
+
+# print search terms to get accession metadata from manual sra downloads
+# paste this field into the sra search field, only include 40 species at a time
+# At the top right of the results page, go to send to -> file -> summary -> download
+# Save each file as sra_result*.csv, where * is a unique character
+gsub("$", "[Organism]", paste(speciesList, collapse = "[Organism] OR "))
+
+# load run metadata
+metaFiles = list.files(pattern = "sra_result.*")
+metaList = lapply(metaFiles, FUN = read.csv)
+metadata = do.call("rbind", metaList)
+names(metadata)[1] = "Experiment"
+
+# merge metadata with each species 
+myMerge = function(x){
+  merge(x, metadata, by = "Experiment")
+}
+speciesRunList = lapply(speciesRunList, myMerge)
+
+sum(unlist(lapply(speciesRunList, nrow))) # total number of runs included
+```
