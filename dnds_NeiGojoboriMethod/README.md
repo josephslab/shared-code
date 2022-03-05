@@ -17,8 +17,15 @@ To save script output to a file:
 `python3 neiGojobori_dnds.py data/examplePair.fasta > exampleOutput.txt`
 
 Apply script to a folder of fasta files
+
+`for FILE in data/*.fasta; do python3 neiGojobori_dnds.py $FILE > $(basename $FILE fasta)dnds; done`
+
+This creates one file ending in `.dnds` for each `.fasta` file. These files can then be loaded and concatenated in R
+
 ```
-for FILE in data/*; do python3 neiGojobori_dnds.py $FILE >> output.txt; done
+dndsFiles = list.files(pattern=".*dnds") # get list of dnds files
+dndsFiles = lapply(dndsFiles, read.table, sep="\t", header=T) # load files
+dndsFiles = do.call("rbind", dndsFiles) # bind files together row-wise
 ```
 
 # Understanding the input
